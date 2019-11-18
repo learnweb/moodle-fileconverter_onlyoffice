@@ -26,6 +26,14 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-   // TODO: Define the plugin settings page.
-   // https://docs.moodle.org/dev/Admin_settings
+    // Basic settings.
+    $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/publicurl',
+        get_string('settings:publicurl', 'fileconverter_onlyoffice'),
+        get_string('settings:publicurl_help', 'fileconverter_onlyoffice'),
+        ''));
+
+    $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/privateurl',
+        get_string('settings:privateurl', 'fileconverter_onlyoffice'),
+        get_string('settings:privateurl_help', 'fileconverter_onlyoffice'),
+        ''));
 }
