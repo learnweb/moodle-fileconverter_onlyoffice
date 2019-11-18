@@ -15,17 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Representation of exceptions that occurred in a request.
  *
  * @package     fileconverter_onlyoffice
  * @copyright   2019 Jan Dageförde, University of Münster <jan.dagefoerde@ercis.uni-muenster.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace fileconverter_onlyoffice;
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * Representation of exceptions that occurred in a request.
+ *
+ * @package     fileconverter_onlyoffice
+ * @copyright   2019 Jan Dageförde, University of Münster <jan.dagefoerde@ercis.uni-muenster.de>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class OnlyOfficeException extends \RuntimeException {
 
-$plugin->component = 'fileconverter_onlyoffice';
-$plugin->release = '3.8-r1';
-$plugin->version = 2019111802;
-$plugin->requires = 2019052000;
-$plugin->maturity = MATURITY_ALPHA;
+}

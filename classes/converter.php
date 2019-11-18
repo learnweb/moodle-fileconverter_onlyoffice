@@ -27,8 +27,6 @@ namespace fileconverter_onlyoffice;
 defined('MOODLE_INTERNAL') || die();
 
 use \core_files\conversion;
-use Aws\S3\S3Client;
-use Aws\S3\Exception\S3Exception;
 
 /**
  * Class for converting files between different file formats using OnlyOffice.
@@ -81,6 +79,11 @@ class converter implements \core_files\converter_interface {
     const CODEPAGE_UTF8 = 65001;
 
     /**
+     * @var documentserver_client
+     */
+    private $client = null;
+
+    /**
      * Class constructor
      */
     public function __construct() {
@@ -88,60 +91,20 @@ class converter implements \core_files\converter_interface {
     }
 
     /**
-     * Create AWS S3 API client.
+     * Establish access to OnlyOffice Document Server
      *
-     * @param \GuzzleHttp\Handler $handler Optional handler.
-     * @return \Aws\S3\S3Client
+     * @param string $publicurl Public OnlyOffice document server URL
+     * @param string $privateurl Private OnlyOfice fdocument server URL
+     * @return documentserver_client
      */
-    public function create_client($handler=null) {
-        $connectionoptions = array(
-            'version' => 'latest',
-            'region' => $this->config->api_region,
-            'credentials' => [
-                'key' => $this->config->api_key,
-                'secret' => $this->config->api_secret
-            ]);
-
-        // Allow handler overriding for testing.
-        if ($handler != null) {
-            $connectionoptions['handler'] = $handler;
-        }
+    public function create_client(): documentserver_client {
 
         // Only create client if it hasn't already been done.
         if ($this->client == null) {
-            $this->client = new S3Client($connectionoptions);
+            $this->client = new documentserver_client($this->config->publicurl, $this->config->privateurl);
         }
 
         return $this->client;
-    }
-
-    /**
-     * When an exception occurs get and return
-     * the exception details.
-     *
-     * @param \Aws\Exception $exception The thrown exception.
-     * @return string $details The details of the exception.
-     */
-    private function get_exception_details($exception) {
-        $message = $exception->getMessage();
-
-        if (get_class($exception) !== 'S3Exception') {
-            return "Not a S3 exception : $message";
-        }
-
-        $errorcode = $exception->getAwsErrorCode();
-
-        $details = ' ';
-
-        if ($message) {
-            $details .= "ERROR MSG: " . $message . "\n";
-        }
-
-        if ($errorcode) {
-            $details .= "ERROR CODE: " . $errorcode . "\n";
-        }
-
-        return $details;
     }
 
     /**
@@ -153,28 +116,11 @@ class converter implements \core_files\converter_interface {
     private static function is_config_set(\fileconverter_onlyoffice\converter $converter) {
         $iscorrect = true;
 
-        if (empty($converter->config->api_key) ||
-            empty($converter->config->api_secret) ||
-            empty($converter->config->api_region)) {
+        if (empty($converter->config->publicurl) ||
+            empty($converter->config->privateurl)) {
             $iscorrect = false;
         }
         return $iscorrect;
-    }
-
-    /**
-     * Delete the converted file from the output bucket in S3.
-     *
-     * @param string $objectkey The key of the object to delete.
-     */
-    private function delete_converted_file($objectkey) {
-        $deleteparams = array(
-            'Bucket' => $this->config->s3_output_bucket, // Required.
-            'Key' => $objectkey, // Required.
-        );
-
-        $s3client = $this->create_client();
-        $s3client->deleteObject($deleteparams);
-
     }
 
     private function format_request_parameters(\stored_file $file, string $targetformat): array {
@@ -206,23 +152,9 @@ class converter implements \core_files\converter_interface {
             return false;
         }
 
+        echo 'a';
         $converter->create_client();
-
-        // TODO Check connection/permissions.
-        $bucket = $converter->config->s3_input_bucket;
-        $permissions = self::have_bucket_permissions($converter, $bucket);
-        if (!$permissions->success) {
-            debugging('fileconverter_onlyoffice permissions failure on input bucket');
-            return false;
-        }
-
-        // Check output bucket permissions.
-        $bucket = $converter->config->s3_output_bucket;
-        $permissions = self::have_bucket_permissions($converter, $bucket);
-        if (!$permissions->success) {
-            debugging('fileconverter_onlyoffice permissions failure on output bucket');
-            return false;
-        }
+        echo 'b';
 
         return true;
     }
@@ -244,7 +176,7 @@ class converter implements \core_files\converter_interface {
             $result = $ooclient->request_conversion($requestparams);
             $conversion->set('status', conversion::STATUS_IN_PROGRESS);
             $this->status = conversion::STATUS_IN_PROGRESS;
-        } catch (OOException $e) {
+        } catch (OnlyOfficeException $e) {
             $conversion->set('status', conversion::STATUS_FAILED);
             $this->status = conversion::STATUS_FAILED;
         }
@@ -298,14 +230,12 @@ class converter implements \core_files\converter_interface {
                 $conversion->set('status', conversion::STATUS_IN_PROGRESS);
                 $this->status = conversion::STATUS_IN_PROGRESS;
             } else {
-                $result = $s3client->getObject($downloadparams);// side-effect: stores into $saveas. TODO adapt
-                $conversion->store_destfile_from_path($saveas);
+                // $result['fileUrl'] contains a URL to the generated PDF! TODO Download it.
+                //$conversion->store_destfile_from_path($saveas); // TODO adapt this.
                 $this->status = conversion::STATUS_COMPLETE;
                 $conversion->set('status', conversion::STATUS_COMPLETE);
-                //$this->delete_converted_file($file->get_pathnamehash());
-
             }
-        } catch (OOException $e) {
+        } catch (OnlyOfficeException $e) {
             $conversion->set('status', conversion::STATUS_FAILED);
             $this->status = conversion::STATUS_FAILED;
         }
