@@ -152,9 +152,7 @@ class converter implements \core_files\converter_interface {
             return false;
         }
 
-        echo 'a';
         $converter->create_client();
-        echo 'b';
 
         return true;
     }
@@ -226,12 +224,15 @@ class converter implements \core_files\converter_interface {
         $ooclient = $this->create_client();
         try {
             $result = $ooclient->request_conversion($requestparams);
-            if ($result['endConvert'] === false) {
+            if ($result->endConvert === false) {
                 $conversion->set('status', conversion::STATUS_IN_PROGRESS);
                 $this->status = conversion::STATUS_IN_PROGRESS;
             } else {
-                // $result['fileUrl'] contains a URL to the generated PDF! TODO Download it.
-                //$conversion->store_destfile_from_path($saveas); // TODO adapt this.
+                // File is ready! Retrieve it from DS and store it in filedir.
+                download_file_content($result->fileUrl, null, null, false, 300, 20, false, $saveas);
+                $conversion->store_destfile_from_path($saveas);
+
+                // Update persistent.
                 $this->status = conversion::STATUS_COMPLETE;
                 $conversion->set('status', conversion::STATUS_COMPLETE);
             }
