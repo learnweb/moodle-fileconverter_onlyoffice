@@ -58,9 +58,8 @@ class documentserver_client {
      * @param string $privateurl Private OnlyOfice document server URL
      */
     public function __construct(string $publicurl, string $privateurl) {
-        // TODO sanitise base URLs.
-        $this->publicurl = $publicurl;
-        $this->privateurl = $privateurl;
+        $this->publicurl = rtrim($publicurl, '/');
+        $this->privateurl = rtrim($privateurl, '/');
         $this->curl = new \curl();
     }
 
