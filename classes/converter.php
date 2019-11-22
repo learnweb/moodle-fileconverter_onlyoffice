@@ -124,8 +124,10 @@ class converter implements \core_files\converter_interface {
     }
 
     private function format_request_parameters(\stored_file $file, string $targetformat): array {
-        //$file->
         $sourceformat = 'docx'; // TODO get extension from filename.
+
+        $downloadfrom = \moodle_url::make_pluginfile_url(\context_system::instance()->id, 'fileconverter_onlyoffice', 'original',
+            $file->get_id(), '/'.$file->get_contenthash().'/', $file->get_filename());
 
         $params = [
             'async' => true,
@@ -133,7 +135,7 @@ class converter implements \core_files\converter_interface {
             'filetype' => $sourceformat,
             'key' => $file->get_contenthash(), // TODO must be unique, add a moodly prefix.
             'outputtype' => $targetformat,
-            'url' => '', // TODO
+            'url' => $downloadfrom->out(false),
         ];
         return $params;
     }
@@ -213,8 +215,7 @@ class converter implements \core_files\converter_interface {
 
         $file = $conversion->get_sourcefile();
 
-        $requestparams = $this->format_request_parameters($file,
-            $conversion->get('targetformat'));
+        $requestparams = $this->format_request_parameters($file, $conversion->get('targetformat'));
 
         $file = $conversion->get_sourcefile();
         $tmpdir = make_request_directory();
