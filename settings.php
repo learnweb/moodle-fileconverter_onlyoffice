@@ -27,11 +27,9 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
     // Basic settings.
-    $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/publicurl',
-        get_string('settings:publicurl', 'fileconverter_onlyoffice'),
-        get_string('settings:publicurl_help', 'fileconverter_onlyoffice'),
-        ''));
 
+    // Specify the URL to the document server host.
+    // Must be specified in a way s. t. Moodle(!) can connect to it directly -- it is never used from the browser.
     $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/privateurl',
         get_string('settings:privateurl', 'fileconverter_onlyoffice'),
         get_string('settings:privateurl_help', 'fileconverter_onlyoffice'),

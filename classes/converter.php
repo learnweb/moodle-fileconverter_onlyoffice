@@ -93,15 +93,13 @@ class converter implements \core_files\converter_interface {
     /**
      * Establish access to OnlyOffice Document Server
      *
-     * @param string $publicurl Public OnlyOffice document server URL
-     * @param string $privateurl Private OnlyOfice fdocument server URL
      * @return documentserver_client
      */
     public function create_client(): documentserver_client {
 
         // Only create client if it hasn't already been done.
         if ($this->client == null) {
-            $this->client = new documentserver_client($this->config->publicurl, $this->config->privateurl);
+            $this->client = new documentserver_client($this->config->privateurl);
         }
 
         return $this->client;
@@ -116,8 +114,7 @@ class converter implements \core_files\converter_interface {
     private static function is_config_set(\fileconverter_onlyoffice\converter $converter) {
         $iscorrect = true;
 
-        if (empty($converter->config->publicurl) ||
-            empty($converter->config->privateurl)) {
+        if (empty($converter->config->privateurl)) {
             $iscorrect = false;
         }
         return $iscorrect;

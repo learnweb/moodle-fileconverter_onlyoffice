@@ -42,29 +42,22 @@ class documentserver_client {
     /** @var curl $curl */
     protected $curl;
     /**
-     * Public OnlyOfice document server URL
-     * @var string
-     */
-    private $publicurl;
-    /**
      * Private OnlyOfice document server URL
      * @var string
      */
-    private $privateurl;
+    private $documentserverhost;
 
     /**
      * Initialise the client.
-     * @param string $publicurl Public OnlyOfice document server URL
-     * @param string $privateurl Private OnlyOfice document server URL
+     * @param string $documentserverhost Private OnlyOfice document server URL
      */
-    public function __construct(string $publicurl, string $privateurl) {
-        $this->publicurl = rtrim($publicurl, '/');
-        $this->privateurl = rtrim($privateurl, '/');
+    public function __construct(string $documentserverhost) {
+        $this->documentserverhost = rtrim($documentserverhost, '/');
         $this->curl = new \curl();
     }
 
     public function request_conversion($params) {
-        $endpoint = $this->privateurl . '/ConvertService.ashx';
+        $endpoint = $this->documentserverhost . '/ConvertService.ashx';
         $callargs = json_encode($params);
         $this->curl->setHeader('Content-type: application/json');
         $this->curl->setHeader('Accept: application/json');
