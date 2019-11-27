@@ -124,10 +124,14 @@ class converter implements \core_files\converter_interface {
     }
 
     private function format_request_parameters(\stored_file $file, string $targetformat): array {
+        global $CFG;
         $sourceformat = 'docx'; // TODO get extension from filename.
 
         $downloadfrom = \moodle_url::make_pluginfile_url(\context_system::instance()->id, 'fileconverter_onlyoffice', 'original',
             $file->get_id(), '/'.$file->get_contenthash().'/', $file->get_filename());
+        // Modify URL, as the app server may request things from Moodle via a different host -- consider Docker!
+        // TODO make URL configureable.
+        $modifiedurl = str_replace($CFG->wwwroot, 'http://app-server/moodle', $downloadfrom->out(false));
 
         $params = [
             'async' => true,
@@ -135,7 +139,7 @@ class converter implements \core_files\converter_interface {
             'filetype' => $sourceformat,
             'key' => $file->get_contenthash(), // TODO must be unique, add a moodly prefix.
             'outputtype' => $targetformat,
-            'url' => $downloadfrom->out(false),
+            'url' => $modifiedurl,
         ];
         return $params;
     }
