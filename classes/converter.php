@@ -117,6 +117,7 @@ class converter implements \core_files\converter_interface {
         if (empty($converter->config->privateurl)) {
             $iscorrect = false;
         }
+        // The internalmoodleurl setting does not need to be checked, as it is optional.
         return $iscorrect;
     }
 
@@ -124,9 +125,15 @@ class converter implements \core_files\converter_interface {
         global $CFG;
         $downloadfrom = \moodle_url::make_pluginfile_url(\context_system::instance()->id, 'fileconverter_onlyoffice', 'original',
             $file->get_id(), '/'.$file->get_contenthash().'/', $file->get_filename());
-        // Modify URL, as the app server may request things from Moodle via a different host -- consider Docker!
-        // TODO make URL configureable.
-        $modifiedurl = str_replace($CFG->wwwroot, 'http://app-server/moodle', $downloadfrom->out(false));
+
+        // Modify URL, as the app server may need to request things from Moodle via a different host -- consider Docker!
+        if (empty($this->config->internalmoodleurl)) {
+            // Setting empty -- use default wwwroot.
+            $modifiedurl = $downloadfrom->out(false);
+        } else {
+            $internalmoodleurl = rtrim($this->config->internalmoodleurl, '/');
+            $modifiedurl = str_replace($CFG->wwwroot, $internalmoodleurl, $downloadfrom->out(false));
+        }
 
         $params = [
             'async' => true,

@@ -25,13 +25,21 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-if ($ADMIN->fulltree) {
-    // Basic settings.
+global $CFG;
 
+if ($ADMIN->fulltree) {
     // Specify the URL to the document server host.
     // Must be specified in a way s. t. Moodle(!) can connect to it directly -- it is never used from the browser.
     $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/privateurl',
         get_string('settings:privateurl', 'fileconverter_onlyoffice'),
         get_string('settings:privateurl_help', 'fileconverter_onlyoffice'),
+        ''));
+
+    // Specify the URL at which the OO document server can reach the Moodle wwwroot.
+    // Usually it is identical to the wwwroot, but it may vary in certain configurations (e. g., containerised setup with Docker).
+    // Leave empty if it is identical to the wwwroot.
+    $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/internalmoodleurl',
+        get_string('settings:internalmoodleurl', 'fileconverter_onlyoffice'),
+        get_string('settings:internalmoodleurl_help', 'fileconverter_onlyoffice'),
         ''));
 }
