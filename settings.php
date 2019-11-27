@@ -28,11 +28,11 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 if ($ADMIN->fulltree) {
-    // Specify the URL to the document server host.
+    // Specify the URL to the OnlyOffice document server host.
     // Must be specified in a way s. t. Moodle(!) can connect to it directly -- it is never used from the browser.
-    $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/privateurl',
-        get_string('settings:privateurl', 'fileconverter_onlyoffice'),
-        get_string('settings:privateurl_help', 'fileconverter_onlyoffice'),
+    $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/internaloodsurl',
+        get_string('settings:internaloodsurl', 'fileconverter_onlyoffice'),
+        get_string('settings:internaloodsurl_help', 'fileconverter_onlyoffice'),
         ''));
 
     // Specify the URL at which the OO document server can reach the Moodle wwwroot.

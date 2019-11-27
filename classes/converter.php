@@ -99,7 +99,7 @@ class converter implements \core_files\converter_interface {
 
         // Only create client if it hasn't already been done.
         if ($this->client == null) {
-            $this->client = new documentserver_client($this->config->privateurl);
+            $this->client = new documentserver_client($this->config->internaloodsurl);
         }
 
         return $this->client;
@@ -114,7 +114,7 @@ class converter implements \core_files\converter_interface {
     private static function is_config_set(\fileconverter_onlyoffice\converter $converter) {
         $iscorrect = true;
 
-        if (empty($converter->config->privateurl)) {
+        if (empty($converter->config->internaloodsurl)) {
             $iscorrect = false;
         }
         // The internalmoodleurl setting does not need to be checked, as it is optional.
