@@ -134,7 +134,7 @@ class converter implements \core_files\converter_interface {
         $params = [
             'async' => true,
             'codePage' => self::CODEPAGE_UTF8,
-            'key' => $file->get_contenthash(), // TODO must be unique, add a moodly prefix.
+            'key' => 'moodle_'.$file->get_contenthash(),
             'outputtype' => $targetformat,
             'url' => $modifiedurl,
         ];
