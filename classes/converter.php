@@ -39,20 +39,21 @@ use \core_files\conversion;
 class converter implements \core_files\converter_interface {
     /** @var array $imports List of supported import file formats */
     private static $imports = [
+        // Document file formats.
         'doc' => 'application/msword',
         'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'rtf' => 'application/rtf',
+        'odt' => 'application/vnd.oasis.opendocument.text',
+        'html' => 'text/html',
+        'txt' => 'text/plain',
+        // Spreadsheet file formats.
         'xls' => 'application/vnd.ms-excel',
         'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        // Presentation file formats.
         'ppt' => 'application/vnd.ms-powerpoint',
         'pptx' => 'application/vnd.ms-powerpoint',
-        'html' => 'text/html',
-        'odt' => 'application/vnd.oasis.opendocument.text',
-        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-        'png' => 'image/png',
-        'jpg' => 'image/jpeg',
-        'txt' => 'text/plain',
-        'gif' => 'image/gif',
+        'odp' => 'application/vnd.oasis.opendocument.presentation',
     ];
 
     /** @var array $export List of supported export file formats */
@@ -287,7 +288,12 @@ class converter implements \core_files\converter_interface {
      */
     public function get_supported_conversions() {
         $conversions = array(
-            'doc', 'docx', 'rtf', 'xls', 'xlsx', 'ppt', 'pptx', 'html', 'odt', 'ods', 'txt', 'png', 'jpg', 'gif', 'pdf'
+            // Document file formats.
+            'doc', 'docx', 'rtf', 'odt', 'html', 'txt',
+            // Spreadsheet file formats.
+            'xls', 'xlsx', 'ods', 'csv',
+            // Presentation file formats.
+            'ppt', 'pptx', 'odp',
             );
         return implode(', ', $conversions);
     }
