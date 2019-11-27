@@ -70,7 +70,7 @@ class documentserver_client {
         $json = json_decode($response);
 
         if (!empty($json->error)) {
-            throw new coding_exception($json->error->code . ': ' . $json->error->message);
+            throw new coding_exception($json->error->code . ': ' . $json->error->message . '. Response was: '.$response);
         }
         return $json;
     }
