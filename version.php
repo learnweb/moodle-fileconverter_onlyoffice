@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'fileconverter_onlyoffice';
 $plugin->release = '3.8-r1';
-$plugin->version = 2019112703;
+$plugin->version = 2019122200;
 $plugin->requires = 2019052000;
-$plugin->maturity = MATURITY_ALPHA;
+$plugin->maturity = MATURITY_STABLE;
