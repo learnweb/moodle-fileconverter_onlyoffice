@@ -199,7 +199,7 @@ class converter implements \core_files\converter_interface {
                 'id' => $conversion->get('id'),
                 'status' => $this->status
             ));
-        $event = \fileconverter_onlyoffice\event\poll_conversion_status::create($eventinfo);
+        $event = \fileconverter_onlyoffice\event\start_document_conversion::create($eventinfo);
         $event->trigger();
 
         return $this;
