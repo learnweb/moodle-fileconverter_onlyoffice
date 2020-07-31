@@ -30,3 +30,4 @@ $string['settings:internaloodsurl'] = 'Internal ONLYOFFICE Document Server URL';
 $string['settings:internaloodsurl_help'] = 'Specify the URL at which the ONLYOFFICE document server can be reached *by Moodle*. The URL is never resolved in the browser, only in CURL requests by Moodle, so it will be resolved only in  the local network.';
 $string['settings:internalmoodleurl'] = 'Internal Moodle URL';
 $string['settings:internalmoodleurl_help'] = 'Optionally, specify the URL at which the ONLYOFFICE document server will be able to find Moodle (modified wwwroot). If left blank, it will use the normal wwwroot as usual. Typically, this setting does not need to be set, unless the wwwroot in the browser differs from that in the local network (which is usually the case in containerised setups).';
+$string['preparesubmissionsforannotation'] = 'Prepare submissions for annotation';
