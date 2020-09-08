@@ -31,3 +31,6 @@ $string['settings:internaloodsurl_help'] = 'Specify the URL at which the ONLYOFF
 $string['settings:internalmoodleurl'] = 'Internal Moodle URL';
 $string['settings:internalmoodleurl_help'] = 'Optionally, specify the URL at which the ONLYOFFICE document server will be able to find Moodle (modified wwwroot). If left blank, it will use the normal wwwroot as usual. Typically, this setting does not need to be set, unless the wwwroot in the browser differs from that in the local network (which is usually the case in containerised setups).';
 $string['preparesubmissionsforannotation'] = 'Prepare submissions for annotation';
+$string['privacy:metadata:filecontent'] = 'The content of the file.';
+$string['privacy:metadata:externalpurpose'] = 'The file is send to a external ONLYOFFICE document server, which stores the file briefly in order to convert it into the desired file format.';
+
