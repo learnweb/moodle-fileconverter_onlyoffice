@@ -33,4 +33,5 @@ $string['settings:internalmoodleurl_help'] = 'Optionally, specify the URL at whi
 $string['preparesubmissionsforannotation'] = 'Prepare submissions for annotation';
 $string['privacy:metadata:filecontent'] = 'The content of the file.';
 $string['privacy:metadata:externalpurpose'] = 'The file is send to a external ONLYOFFICE document server, which stores the file briefly in order to convert it into the desired file format.';
-
+$string['event:start_document_conversion'] = 'Document conversion started.';
+$string['event:poll_conversion_status'] = 'Polling document conversion status.';
