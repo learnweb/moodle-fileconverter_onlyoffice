@@ -67,16 +67,16 @@ class documentserver_client {
         $endpoint = $this->documentserverhost . '/ConvertService.ashx';
         if ($this->documentserversecret ) {
              $payload = ["payload" => $params];
-             $headerToken = JWT::encode($payload, $this->documentserversecret);
+             $headertoken = JWT::encode($payload, $this->documentserversecret);
              $token = JWT::encode($params, $this->documentserversecret);
              $params['token'] = $token;
         }
         $callargs = json_encode($params);
         $this->curl->setHeader('Content-type: application/json');
         $this->curl->setHeader('Accept: application/json');
-        if ($this->documentserversecret ) {
-           $this->curl->setHeader('Authorization: ' . $headerToken);
-       }
+        if ($this->documentserversecret) {
+            $this->curl->setHeader('Authorization: ' . $headertoken);
+        }
         $response = $this->curl->post($endpoint, $callargs);
 
         if ($this->curl->errno != 0) {

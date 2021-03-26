@@ -34,7 +34,6 @@ if ($ADMIN->fulltree) {
         get_string('settings:internaloodsurl', 'fileconverter_onlyoffice'),
         get_string('settings:internaloodsurl_help', 'fileconverter_onlyoffice'),
         ''));
-        
         // Token Secret JWT
     $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/documentserversecret',
         get_string('documentserversecret', 'fileconverter_onlyoffice'),
