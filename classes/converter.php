@@ -100,7 +100,7 @@ class converter implements \core_files\converter_interface {
 
         // Only create client if it hasn't already been done.
         if ($this->client == null) {
-            $this->client = new documentserver_client($this->config->internaloodsurl);
+            $this->client = new documentserver_client($this->config->internaloodsurl, $this->config->documentserversecret);
         }
 
         return $this->client;
