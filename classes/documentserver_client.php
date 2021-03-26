@@ -24,6 +24,7 @@
 namespace fileconverter_onlyoffice;
 
 use coding_exception;
+use Firebase\JWT\JWT;
 use curl;
 
 defined('MOODLE_INTERNAL') || die();
@@ -46,21 +47,36 @@ class documentserver_client {
      * @var string
      */
     private $documentserverhost;
+    /**
+     * Private OnlyOfice document server Secret Token
+     * @var string
+     */
+    private $documentserversecret;
 
     /**
      * Initialise the client.
      * @param string $documentserverhost Private OnlyOfice document server URL
      */
-    public function __construct(string $documentserverhost) {
+    public function __construct(string $documentserverhost, string $documentserversecret = null) {
         $this->documentserverhost = rtrim($documentserverhost, '/');
+        $this->documentserversecret = $documentserversecret;
         $this->curl = new \curl();
     }
 
     public function request_conversion($params) {
         $endpoint = $this->documentserverhost . '/ConvertService.ashx';
+        if ($this->documentserversecret ) {
+             $payload = ["payload" => $params];
+             $headerToken = JWT::encode($payload, $this->documentserversecret);
+             $token = JWT::encode($params, $this->documentserversecret);
+             $params['token'] = $token;
+        }
         $callargs = json_encode($params);
         $this->curl->setHeader('Content-type: application/json');
         $this->curl->setHeader('Accept: application/json');
+        if ($this->documentserversecret ) {
+           $this->curl->setHeader('Authorization: ' . $headerToken);
+       }
         $response = $this->curl->post($endpoint, $callargs);
 
         if ($this->curl->errno != 0) {

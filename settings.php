@@ -34,6 +34,12 @@ if ($ADMIN->fulltree) {
         get_string('settings:internaloodsurl', 'fileconverter_onlyoffice'),
         get_string('settings:internaloodsurl_help', 'fileconverter_onlyoffice'),
         ''));
+        
+        // Token Secret JWT
+    $settings->add(new admin_setting_configtext('fileconverter_onlyoffice/documentserversecret',
+        get_string('documentserversecret', 'fileconverter_onlyoffice'),
+        get_string('documentserversecret_desc', 'fileconverter_onlyoffice'),
+    ''));
 
     // Specify the URL at which the OO document server can reach the Moodle wwwroot.
     // Usually it is identical to the wwwroot, but it may vary in certain configurations (e. g., containerised setup with Docker).

@@ -33,4 +33,5 @@ $string['settings:internalmoodleurl_help'] = 'Optionally, specify the URL at whi
 $string['preparesubmissionsforannotation'] = 'Prepare submissions for annotation';
 $string['privacy:metadata:filecontent'] = 'The content of the file.';
 $string['privacy:metadata:externalpurpose'] = 'The file is send to a external ONLYOFFICE document server, which stores the file briefly in order to convert it into the desired file format.';
-
+$string['documentserversecret'] = 'Document Server Secret';
+$string['documentserversecret_desc'] = 'The secret is used to generate the token (an encrypted signature) in the browser for the document editor opening and calling the methods and the requests to the document command service and document conversion service. The token prevents the substitution of important parameters in ONLYOFFICE Document Server requests.';
