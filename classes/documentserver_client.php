@@ -23,7 +23,6 @@
  */
 namespace fileconverter_onlyoffice;
 
-use coding_exception;
 use curl;
 
 defined('MOODLE_INTERNAL') || die();
@@ -64,13 +63,13 @@ class documentserver_client {
         $response = $this->curl->post($endpoint, $callargs);
 
         if ($this->curl->errno != 0) {
-            throw new coding_exception($this->curl->error, $this->curl->errno);
+            throw new OnlyOfficeException($this->curl->error, $this->curl->errno);
         }
 
         $json = json_decode($response);
 
         if (!empty($json->error)) {
-            throw new coding_exception($json->error->code . ': ' . $json->error->message . '. Response was: '.$response);
+            throw new OnlyOfficeException($json->error->code . ': ' . $json->error->message . '. Response was: '.$response);
         }
         return $json;
     }
