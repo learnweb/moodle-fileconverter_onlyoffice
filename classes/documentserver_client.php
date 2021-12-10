@@ -23,7 +23,6 @@
  */
 namespace fileconverter_onlyoffice;
 
-use OnlyOfficeException;
 use curl;
 
 defined('MOODLE_INTERNAL') || die();
