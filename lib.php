@@ -23,8 +23,6 @@
  */
 use core_files\conversion;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Serve the submitted files to the OnlyOffice document server.
  *

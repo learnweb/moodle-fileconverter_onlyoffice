@@ -24,8 +24,6 @@
  */
 namespace fileconverter_onlyoffice;
 
-defined('MOODLE_INTERNAL') || die();
-
 use \core_files\conversion;
 
 /**
