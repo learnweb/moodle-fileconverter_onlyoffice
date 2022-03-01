@@ -26,8 +26,6 @@ namespace fileconverter_onlyoffice\task;
 
 use core\task\scheduled_task;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Simple task to convert submissions to pdf in the background.
  * @copyright  2019 Jan Dageförde, University of Münster <jan.dagefoerde@ercis.uni-muenster.de>
