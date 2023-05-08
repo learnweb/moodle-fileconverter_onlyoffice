@@ -42,4 +42,10 @@ if ($ADMIN->fulltree) {
         get_string('settings:internalmoodleurl', 'fileconverter_onlyoffice'),
         get_string('settings:internalmoodleurl_help', 'fileconverter_onlyoffice'),
         ''));
+
+    $settings->add(new admin_setting_configpasswordunmask('fileconverter_onlyoffice/secret',
+        get_string('settings:secret', 'fileconverter_onlyoffice'),
+        get_string('settings:secret_help', 'fileconverter_onlyoffice'),
+        ''
+    ));
 }

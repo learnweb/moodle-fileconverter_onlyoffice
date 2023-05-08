@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'fileconverter_onlyoffice';
-$plugin->release = '3.8-r1';
-$plugin->version = 2019122200;
-$plugin->requires = 2019052000;
+$plugin->release = '4.1-r1';
+$plugin->version = 2022120900;
+$plugin->requires = 2020061500; // Requires Moodle 3.9+.
 $plugin->maturity = MATURITY_STABLE;

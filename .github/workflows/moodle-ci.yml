@@ -6,33 +6,42 @@ jobs:
   static:
     runs-on: ubuntu-latest
 
+    outputs:
+      has_tests: ${{ steps.check_tests.outputs.has_tests }}
+
     strategy:
       matrix:
-        php: ['7.4']
-        moodle-branch: ['MOODLE_311_STABLE']
+        php: ['8.1']
+        moodle-branch: ['MOODLE_402_STABLE']
         database: ['pgsql']
 
     steps:
       - name: Start PostgreSQL
-        run: docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres:9.6
+        run: docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres:14
 
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: plugin
+
+      - name: Check for test folder
+        id: check_tests
+        run: |
+          echo "has_tests=${{ hashFiles('plugin/tests') != '' }}" >> $GITHUB_OUTPUT
 
       - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          ini-values: max_input_vars=5000
           coverage: none
 
       - name: Get composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Composer cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -40,7 +49,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: npm cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -102,13 +111,33 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: static
+    if: ${{ needs.static.outputs.has_tests == 'true' }}
 
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.3', '7.4']
-        moodle-branch: ['MOODLE_39_STABLE', 'MOODLE_310_STABLE', 'MOODLE_311_STABLE']
+        php: ['8.0', '8.1']
+        moodle-branch: ['MOODLE_401_STABLE', 'MOODLE_402_STABLE']
         database: ['mariadb', 'pgsql']
+        include:
+          - php: '7.4'
+            moodle-branch: 'MOODLE_39_STABLE'
+            database: 'mariadb'
+          - php: '7.4'
+            moodle-branch: 'MOODLE_39_STABLE'
+            database: 'pgsql'
+          - php: '8.0'
+            moodle-branch: 'MOODLE_311_STABLE'
+            database: 'mariadb'
+          - php: '8.0'
+            moodle-branch: 'MOODLE_311_STABLE'
+            database: 'pgsql'
+          - php: '8.0'
+            moodle-branch: 'MOODLE_400_STABLE'
+            database: 'mariadb'
+          - php: '8.0'
+            moodle-branch: 'MOODLE_400_STABLE'
+            database: 'pgsql'
 
     steps:
       - name: Start MariaDB
@@ -117,10 +146,10 @@ jobs:
 
       - name: Start PostgreSQL
         if: matrix.database == 'pgsql'
-        run: docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres:9.6
+        run: docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres:14
 
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: plugin
 
@@ -128,20 +157,21 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          ini-values: max_input_vars=5000
           coverage: none
 
       - name: Get composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
       - name: Composer cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
       - name: npm cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -169,4 +199,4 @@ jobs:
 
       - name: Behat features
         if: ${{ always() }}
-        run: moodle-plugin-ci behat --profile chrome
+        run: moodle-plugin-ci behat --profile chrome --auto-rerun 0
